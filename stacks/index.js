@@ -44,6 +44,14 @@ const knGoService = knative.service({
   }
 })
 
+const knCljService = knative.service({
+  name: 'helloworld-clj',
+  image: 'docker.io/abarnash/helloworld-clj',
+  env: {
+    TARGET: 'Yo Leash'
+  }
+})
+
 const hipyFn = kubeless.fn({
   name: 'hipy',
   fnPath: '../fns/hi.py'
