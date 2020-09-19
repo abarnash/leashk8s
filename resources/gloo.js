@@ -10,7 +10,7 @@ const fnRoute = ({fname,namespace,port,domain,route,upstream}) => {
       apiVersion: 'gateway.solo.io/v1',
       kind: 'VirtualService',
       metadata: {
-        name: 'hipy-route',
+        name: fname,
         namespace: 'gloo-system'
       },
       spec: {
