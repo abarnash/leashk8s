@@ -1,5 +1,6 @@
 const k8s = require("@pulumi/kubernetes")
 const gloo = require("../resources/gloo.js")
+const kubeless = require("../resources/kubeless.js")
 
 const appLabels = {
   app: "nginx"
@@ -24,70 +25,19 @@ const deployment = new k8s.apps.v1.Deployment("nginx", {
   }
 })
 
-const fn =
-  `def handler(event, context):
-    return "hello world"
-`
-const hipyFn = new k8s.apiextensions.CustomResource(
-  'hipy-fn', {
-    apiVersion: 'kubeless.io/v1beta1',
-    kind: 'Function',
-    metadata: {
-      name: 'hipy',
-      namespace: 'default',
-      label: {
-        'created-by': 'kubeless',
-        function: 'hipy'
-      }
-    },
-    spec: {
-      runtime: 'python2.7',
-      timeout: "180",
-      handler: 'hipy.handler',
-      deps: "",
-      // checksum: sha256:d251999dcbfdeccec385606fd0aec385b214cfc74ede8b6c9e47af71728f6e9a
-      'function-content-type': 'text',
-      function: fn
-    }
-  }, {})
+const hipyFn = kubeless.fn({
+  name: 'hipy',
+  fnPath: '../fns/hi.py'
+})
 
-  const hipyRoute = gloo.fnRoute({
-    fname: 'hipy',
-    ns: 'default',
-    port: '8080',
-    route: '/hipy'
-  })
-
-// const hipyRoute = new k8s.apiextensions.CustomResource(
-//   'hipy-route', {
-//     apiVersion: 'gateway.solo.io/v1',
-//     kind: 'VirtualService',
-//     metadata: {
-//       name: 'hipy-route',
-//       namespace: 'gloo-system'
-//     },
-//     spec: {
-//       virtualHost: {
-//         domains: ['foo'],
-//         routes: [
-//           {
-//             matchers: [
-//               { prefix: '/hipy'}
-//             ],
-//             routeAction: {
-//               single: {
-//                 upstream: {
-//                   name: 'default-hipy-8080',
-//                   namespace: 'gloo-system'
-//                 }
-//               }
-//             }
-//           }
-//         ]
-//       }
-//     }
-//   }, {})
+const hipyRoute = gloo.fnRoute({
+  domain: 'fns',
+  fname: 'hipy',
+  namespace: 'default',
+  port: '8080',
+  route: '/hipy'
+})
 
 exports.name = deployment.metadata.name
 
-exports.fn = hipyFn.metadata.name
+exports.fn = hipyFn.name

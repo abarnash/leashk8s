@@ -1,6 +1,10 @@
 const k8s = require("@pulumi/kubernetes")
 
-const fnRoute = ({fname,ns,port,domain,route}) => {
+const fnRoute = ({fname,namespace,port,domain,route,upstream}) => {
+  namespace = namespace || 'default'
+  port = port || '8080'
+  domain = domain || 'api'
+
   return new k8s.apiextensions.CustomResource(
     `${fname}-virtual-service`, {
       apiVersion: 'gateway.solo.io/v1',
@@ -14,12 +18,12 @@ const fnRoute = ({fname,ns,port,domain,route}) => {
           domains: [domain],
           routes: [{
             matchers: [{
-              prefix: route
+              prefix: route || '/'
             }],
             routeAction: {
               single: {
                 upstream: {
-                  name: `${ns}-${fname}-${port}`,
+                  name: upstream || `${namespace}-${fname}-${port}`,
                   namespace: 'gloo-system'
                 }
               }
