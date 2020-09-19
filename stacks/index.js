@@ -1,4 +1,5 @@
 const k8s = require("@pulumi/kubernetes")
+const gloo = require("../resources/gloo.js")
 
 const appLabels = {
   app: "nginx"
@@ -50,35 +51,42 @@ const hipyFn = new k8s.apiextensions.CustomResource(
     }
   }, {})
 
-const hipyRoute = new k8s.apiextensions.CustomResource(
-  'hipy-route', {
-    apiVersion: 'gateway.solo.io/v1',
-    kind: 'VirtualService',
-    metadata: {
-      name: 'hipy-route',
-      namespace: 'gloo-system'
-    },
-    spec: {
-      virtualHost: {
-        domains: ['foo'],
-        routes: [
-          {
-            matchers: [
-              { prefix: '/hipy'}
-            ],
-            routeAction: {
-              single: {
-                upstream: {
-                  name: 'default-hipy-8080',
-                  namespace: 'gloo-system'
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
-  }, {})
+  const hipyRoute = gloo.fnRoute({
+    fname: 'hipy',
+    ns: 'default',
+    port: '8080',
+    route: '/hipy'
+  })
+
+// const hipyRoute = new k8s.apiextensions.CustomResource(
+//   'hipy-route', {
+//     apiVersion: 'gateway.solo.io/v1',
+//     kind: 'VirtualService',
+//     metadata: {
+//       name: 'hipy-route',
+//       namespace: 'gloo-system'
+//     },
+//     spec: {
+//       virtualHost: {
+//         domains: ['foo'],
+//         routes: [
+//           {
+//             matchers: [
+//               { prefix: '/hipy'}
+//             ],
+//             routeAction: {
+//               single: {
+//                 upstream: {
+//                   name: 'default-hipy-8080',
+//                   namespace: 'gloo-system'
+//                 }
+//               }
+//             }
+//           }
+//         ]
+//       }
+//     }
+//   }, {})
 
 exports.name = deployment.metadata.name
 

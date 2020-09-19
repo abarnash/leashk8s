@@ -1,6 +1,6 @@
 {
     "name": "leashk8s",
-    "main": "index.js",
+    "main": "stacks/index.js",
     "dependencies": {
         "@pulumi/pulumi": "^2.0.0",
         "@pulumi/kubernetes": "^2.0.0"
