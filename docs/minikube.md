@@ -53,7 +53,10 @@ sudo install minikube /usr/local/bin/
 ```
 ### Start a Kubernetes cluster with Minikube
 To start a minikube cluster with 2 cpus and 4g memory allocated:
-`minikube start --cpus 2 --memory 4096`
+`minikube start --cpus 2 --memory 4096 --kubernetes-version v1.17.0`
+
+* Note using version 1.17.0 of kubernetes because as of 9/19/2020
+knative was not compatible with v1.19.0.
 
 ### Install helm
 
