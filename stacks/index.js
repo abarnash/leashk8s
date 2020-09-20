@@ -28,7 +28,7 @@ const deployment = new k8s.apps.v1.Deployment("nginx", {
 })
 
 const knService = knative.service({
-  name: 'nodefunc-2',
+  name: 'nodefunc',
   image: 'docker.io/abarnash/nodefunc',
   env: {
     TARGET: 'Friend of Leash',

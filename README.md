@@ -14,11 +14,30 @@ install other dependencies listed here:
 
 `pulumi up`
 
-The stack includes
-- Knative services
+### Knative container services
+
+To get a list of the knative services running:
+
+`kn service list`
+
+Test services:
   - helloworld-go
+    ```
+    curl -H "Host: helloworld-go.default.example.com" $(glooctl proxy url --name knative-external-proxy)
+    ```
   - helloworld-clj
+    ```
+    curl -H "Host: helloworld-clj.default.example.com" $(glooctl proxy url --name knative-external-proxy)
+    ```
   - nodefunc
-- Kubeless function + route
-  - hipy, a python function
-  - hipy-virtual-service, a gloo vs to route requests to hipy
+    ```
+    curl -H "Host: nodefunc.default.example.com" $(glooctl proxy url --name knative-external-proxy)
+    ```
+
+### Kubeless function service
+
+The stack includes a kubeless python function and a gloo virtual service that routes network traffic matching the `/hipy` route to the hipy function.
+
+```
+curl -v -H "Host: fns" $(glooctl proxy url)/hipy
+```
