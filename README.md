@@ -3,12 +3,12 @@
 A repository for managing cloud applications on Kubernetes with
 Pulumi.
 
-## Install a minikube environment
+## Install a local Kubernetes development environment
 
-To run this stack locally, you can install k8s with minikube and
-install other dependencies listed here:
+To run this stack locally, you can install k8s with something like microK8s (runs natively), minikube (runs in a VM) or kind (runs in docker).
 
-[Installation Instructions](docs/minikube.md)
+[microK8s Installation Instructions](docs/microk8s.md)
+[Minikube Installation Instructions](docs/minikube.md)
 
 ## Run the main dev stack
 
