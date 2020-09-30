@@ -11,7 +11,7 @@ const fnRoute = ({fname,namespace,port,domain,route,upstream}) => {
       kind: 'VirtualService',
       metadata: {
         name: fname,
-        namespace: 'gloo-system'
+        namespace: namespace
       },
       spec: {
         virtualHost: {
