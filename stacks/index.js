@@ -7,17 +7,25 @@ const contour = require("../resources/contour.js")
 
 const ns = new k8s.core.v1.Namespace('leashk8s-dev')
 
-// Export the Namespace name
 const NAMESPACE_LABEL = ns.metadata.name;
 
 const appLabels = {
   app: "nginx"
 }
 
-const knService = knative.service({
-  name: 'nodefunc',
+const knRubyService = knative.service({
+  name: 'helloworld-ruby',
   namespace: NAMESPACE_LABEL,
-  image: 'docker.io/abarnash/nodefunc',
+  image: 'docker.io/abarnash/helloworld-ruby',
+  env: {
+    TARGET: 'Friend of Leash'
+  }
+})
+
+const knCljService = knative.service({
+  name: 'helloworld-clj',
+  namespace: NAMESPACE_LABEL,
+  image: 'docker.io/abarnash/helloworld-clj',
   env: {
     TARGET: 'Friend of Leash',
     SOURCE: 'Leash'
@@ -47,28 +55,6 @@ const wsNodeSvc = knative.service({
   },
   env: {
     TARGET: 'Leash'
-  }
-})
-
-const fnGateway = contour.httpGateway({
-  name: 'ws-gateway',
-  namespace: NAMESPACE_LABEL,
-  hosts: [{
-    host: 'www.cloudleash.org',
-    paths: [{
-      path: '/',
-      name: 'node-ws-hhh27'
-    }]
-  }]
-})
-
-const knCljService = knative.service({
-  name: 'helloworld-clj',
-  namespace: NAMESPACE_LABEL,
-  image: 'docker.io/abarnash/helloworld-clj',
-  env: {
-    TARGET: 'Friend of Leash',
-    SOURCE: 'Leash'
   }
 })
 

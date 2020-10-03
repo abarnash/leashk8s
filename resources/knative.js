@@ -47,7 +47,7 @@ const service = ({
       spec: {
         template: {
           metadata: {
-            annotations: { // Knative concurrency-based autoscaling (default).
+            annotations: {
               ...scaleAnnotations
             }
           },
