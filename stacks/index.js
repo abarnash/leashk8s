@@ -14,29 +14,6 @@ const appLabels = {
   app: "nginx"
 }
 
-// const deployment = new k8s.apps.v1.Deployment("nginx", {
-//   metadata: {
-//     namespace: NAMESPACE_LABEL,
-//   },
-//   spec: {
-//     selector: {
-//       matchLabels: appLabels
-//     },
-//     replicas: 1,
-//     template: {
-//       metadata: {
-//         labels: appLabels
-//       },
-//       spec: {
-//         containers: [{
-//           name: "nginx",
-//           image: "nginx"
-//         }]
-//       }
-//     }
-//   }
-// })
-
 const knService = knative.service({
   name: 'nodefunc',
   namespace: NAMESPACE_LABEL,
@@ -56,12 +33,22 @@ const knGoService = knative.service({
   }
 })
 
+const wsNodeSvc = knative.service({
+  name: 'node-ws',
+  namespace: NAMESPACE_LABEL,
+  image: 'docker.io/abarnash/node-ws',
+  env: {
+    TARGET: 'Leash'
+  }
+})
+
 const knCljService = knative.service({
   name: 'helloworld-clj',
   namespace: NAMESPACE_LABEL,
   image: 'docker.io/abarnash/helloworld-clj',
   env: {
-    TARGET: 'Yo Leash'
+    TARGET: 'Friend of Leash',
+    SOURCE: 'Leash'
   }
 })
 
@@ -71,38 +58,39 @@ const hipyFn = kubeless.fn({
   fnPath: '../fns/hi.py'
 })
 
-// const fnGateway = contour.httpGateway({
-//   name: 'fn-gateway',
-//   namespace: NAMESPACE_LABEL,
-//   hosts: [{
-//     host: 'fn.example.com',
-//     paths: [{
-//       path: '/hipy/',
-//       name: hipyFn.name
-//     }]
-//   }]
-// })
-
-
-const ingress = new k8s.networking.v1beta1.Ingress("test-ingress", {
-  metadata: {
-    name: 'test-ingress'
-  },
-  spec: {
-    rules: [{
-      host: 'fntest.example.com',
-      http: {
-        paths: [{
-          backend: {
-            serviceName: hipyFn.name,
-            servicePort: 8080
-          }
-        }]
-      }
-
+const fnGateway = contour.httpGateway({
+  name: 'fn-gateway',
+  namespace: NAMESPACE_LABEL,
+  hosts: [{
+    host: 'fn.example.com',
+    paths: [{
+      path: '/hipy/',
+      name: hipyFn.name
     }]
-  }
-});
+  }]
+})
+
+
+// const ingress = new k8s.networking.v1beta1.Ingress("test-ingress", {
+//   metadata: {
+//     name: 'test-ingress',
+//     // namespace: NAMESPACE_LABEL
+//   },
+//   spec: {
+//     rules: [{
+//       host: 'fntest.example.com',
+//       http: {
+//         paths: [{
+//           backend: {
+//             serviceName: hipyFn.fn.metadata.name,
+//             servicePort: 8080
+//           }
+//         }]
+//       }
+//
+//     }]
+//   }
+// });
 
 // const hipyRoute = gloo.fnRoute({
 //   domain: 'fns',

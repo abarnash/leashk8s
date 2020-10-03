@@ -8,7 +8,7 @@ const makeEnv = (env) =>
 
 const service = ({name, env,image, namespace, port}) => {
   namespace = namespace || 'default'
-  port = port || '8080'
+  port = port || 8080
 
   return new k8s.apiextensions.CustomResource(
     `${name}-knative-service`, {
@@ -23,7 +23,11 @@ const service = ({name, env,image, namespace, port}) => {
           spec: {
             containers: [{
               image: image,
-              env: makeEnv(env)
+              env: makeEnv(env),
+              ports: [{
+                name: `http1`,
+                containerPort: port
+              }]
             }]
           }
         }

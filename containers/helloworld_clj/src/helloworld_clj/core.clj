@@ -5,11 +5,16 @@
 (defn handler [request]
   {:status 200
    :headers {"Content-Type" "text/html"}
-   :body (str "Hello "
+   :body (str "Greetings, "
               (if-let [target (System/getenv "TARGET")]
                 target
                 "World")
-              "!\n")})
+              "\n from "
+              (if-let [source (System/getenv "SOURCE")]
+                source
+                "God")
+
+              "(clojure rules)\n")})
 
 (defn -main [& args]
   (run-jetty handler {:port (if-let [port (System/getenv "PORT")]
