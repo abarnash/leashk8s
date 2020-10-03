@@ -3,6 +3,7 @@ const gloo = require("../resources/gloo.js")
 const kubeless = require("../resources/kubeless.js")
 const knative = require("../resources/knative.js")
 const contour = require("../resources/contour.js")
+const redisStack = require("./redis.js")
 
 const ns = new k8s.core.v1.Namespace('leashk8s-dev')
 
@@ -11,6 +12,17 @@ const NAMESPACE_LABEL = ns.metadata.name;
 const appLabels = {
   app: "nginx"
 }
+
+const redis = redisStack.stack({namespace:NAMESPACE_LABEL})
+
+const nodeRedis = knative.service({
+  name: 'node-redis',
+  namespace: NAMESPACE_LABEL,
+  image: 'docker.io/abarnash/nodefunc',
+  env: {
+    REDIS_HOST: 'redis-master'
+  }
+})
 
 const knRubyService = knative.service({
   name: 'helloworld-ruby',
