@@ -4,7 +4,6 @@ const kubeless = require("../resources/kubeless.js")
 const knative = require("../resources/knative.js")
 const contour = require("../resources/contour.js")
 
-
 const ns = new k8s.core.v1.Namespace('leashk8s-dev')
 
 const NAMESPACE_LABEL = ns.metadata.name;
