@@ -6,9 +6,35 @@ const makeEnv = (env) =>
     value
   }))
 
-const service = ({name, env,image, namespace, port}) => {
+const makeScale = ({
+  min,
+  max,
+  initial
+}) => {
+  min = min && String(min) || '0'
+  max = max && String(max) || '1'
+  initial = initial && String(initial) || '1'
+  return {
+    'autoscaling.knative.dev/class': 'kpa.autoscaling.knative.dev',
+    'autoscaling.knative.dev/metric': 'concurrency',
+    'autoscaling.knative.dev/initialScale': initial,
+    'autoscaling.knative.dev/minScale': min,
+    'autoscaling.knative.dev/maxScale': max
+  }
+}
+
+const service = ({
+  name,
+  env,
+  image,
+  scale,
+  namespace,
+  port
+}) => {
   namespace = namespace || 'default'
   port = port || 8080
+  scale = scale || {}
+  scaleAnnotations = makeScale(scale)
 
   return new k8s.apiextensions.CustomResource(
     `${name}-knative-service`, {
@@ -20,6 +46,11 @@ const service = ({name, env,image, namespace, port}) => {
       },
       spec: {
         template: {
+          metadata: {
+            annotations: { // Knative concurrency-based autoscaling (default).
+              ...scaleAnnotations
+            }
+          },
           spec: {
             containers: [{
               image: image,
