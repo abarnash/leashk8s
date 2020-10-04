@@ -30,15 +30,25 @@ https://www.pulumi.com/docs/get-started/install/
 When prompted `create new stack` hit enter, and provide a name for your stack.
 
 ## Get your stack's namespace
-The stack will create a unique namespace for your stack. You can find this by running:
+The stack will create a unique namespace for your stack here:
+
+```js
+const ns = new k8s.core.v1.Namespace('leashk8s-dev', {
+  metadata: {
+    name: 'leashk8s-dev'
+  }
+})
+```
+
+You can get a list of all namespaces:
 
 `kubectl get ns`
 
-It will be the namespace with the prefix `leashk8s-dev-` followed by a unique identifier.
+and create an alias with:
 
-For convenience you can copy that to an env variable:
+`export KNS=leashk8s-dev`
 
-`export KNS=<<paste ns here>>`
+
 
 ### Knative container services
 
@@ -59,15 +69,15 @@ Add an env variable in your console for that IP address:
 Once you've done that you can test the services with the following examples:
 
   - helloworld-go
-    ```
+    ```sh
     curl -H "Host: helloworld-go.$KNS.cloudleash.org" $ENVOY_IP
     ```
   - helloworld-clj
-    ```
+    ```sh
     curl -H "Host: helloworld-clj.$KNS.cloudleash.org" $ENVOY_IP
     ```
   - helloworld-ruby
-    ```
+    ```sh
     curl -H "Host: helloworld-ruby.$KNS.cloudleash.org" $ENVOY_IP
     ```
 
@@ -85,7 +95,7 @@ The main stack that `pulumi up` will provision is defined:
 
 The stack defines four Knative services, for example the `node-ws` Knative service that provides a serverless websocket application.
 
-```
+```js
 const wsNodeSvc = knative.service({
   name: 'node-ws',
   namespace: NAMESPACE_LABEL,
