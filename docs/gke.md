@@ -27,6 +27,17 @@ gcloud container clusters create $CLUSTER_NAME \
   --num-nodes=3
 ```
 
+## Install knative with ingress
+
+You can use the shell scripts in the `/addons` directory to install knative with
+either Ambassador or Contour as your Ingress.
+
+Ambassador:
+`chmod +x addons/ambassador-knative.sh && sh addons/ambassador-knative.sh`
+
+Contour:
+`chmod +x addons/contour-knative.sh && sh addons/contour-knative.sh`
+
 ## Install knative with contour
 You can install the Knative serverless framework on your k8s cluster with the following commands.
 (This install is using contour in place of Istio, uses less resources I *think*)
