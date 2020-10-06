@@ -29,12 +29,16 @@ const service = ({
   image,
   scale,
   namespace,
-  port
+  port,
+  app
 }) => {
   namespace = namespace || 'default'
   port = port || 8080
   scale = scale || {}
   scaleAnnotations = makeScale(scale)
+  app = app || name
+
+  console.log(makeEnv(env))
 
   return new k8s.apiextensions.CustomResource(
     `${name}-knative-service`, {
@@ -49,6 +53,9 @@ const service = ({
           metadata: {
             annotations: {
               ...scaleAnnotations
+            },
+            labels: {
+              app
             }
           },
           spec: {
