@@ -30,8 +30,7 @@ const service = ({
   scale,
   namespace,
   port,
-  app,
-  private
+  app
 }) => {
   namespace = namespace || 'default'
   port = port || 8080
@@ -42,11 +41,6 @@ const service = ({
   let labels = {app}
 
   let top_labels = []
-
-  // This doesn't work, placeholder for later
-  if (private) {
-    top_labels=['serving.knative.dev/visibility=cluster-local']
-  }
 
   return new k8s.apiextensions.CustomResource(
     `${name}-knative-service`, {

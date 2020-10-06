@@ -10,11 +10,11 @@ const stack = ({
   const APP_NAME = 'apollo'
   //----------------------------------------------------------------------------
   // Accounts service
+  
   const accountsKn = knative.service({
     name: 'accounts',
     namespace: namespace,
     image: 'docker.io/abarnash/accounts',
-    private: true,
     env: {
       KN_HOST: host
     },
@@ -62,7 +62,7 @@ const stack = ({
   const gatewayKn = knative.service({
     name: 'gateway',
     namespace: namespace,
-    image: 'abarnash/gateway',
+    image: 'docker.io/abarnash/gateway',
     scale: {
       min: 1
     },
