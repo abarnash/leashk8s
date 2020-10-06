@@ -7,15 +7,18 @@ const stack = ({
   namespace = namespace || 'default'
   domain = domain || 'localhost'
   const host = namespace.apply(ns => `${ns}.${domain}`)
+  const APP_NAME = 'apollo'
   //----------------------------------------------------------------------------
   // Accounts service
   const accountsKn = knative.service({
     name: 'accounts',
     namespace: namespace,
     image: 'docker.io/abarnash/accounts',
+    private: true,
     env: {
       KN_HOST: host
-    }
+    },
+    app: APP_NAME
   })
 
   //----------------------------------------------------------------------------
@@ -27,6 +30,7 @@ const stack = ({
     env: {
       KN_HOST: host
     },
+    app: APP_NAME
   })
 
   //----------------------------------------------------------------------------
@@ -38,6 +42,7 @@ const stack = ({
     env: {
       KN_HOST: host
     },
+    app: APP_NAME
   })
 
   //----------------------------------------------------------------------------
@@ -49,6 +54,7 @@ const stack = ({
     env: {
       KN_HOST: host
     },
+    app: APP_NAME
   })
 
   //----------------------------------------------------------------------------
@@ -63,6 +69,7 @@ const stack = ({
     env: {
       KN_HOST: host
     },
+    app: APP_NAME
   })
 
   return {

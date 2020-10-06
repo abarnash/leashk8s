@@ -30,7 +30,8 @@ const service = ({
   scale,
   namespace,
   port,
-  app
+  app,
+  private
 }) => {
   namespace = namespace || 'default'
   port = port || 8080
@@ -38,7 +39,14 @@ const service = ({
   scaleAnnotations = makeScale(scale)
   app = app || name
 
-  console.log(makeEnv(env))
+  let labels = {app}
+
+  let top_labels = []
+
+  // This doesn't work, placeholder for later
+  if (private) {
+    top_labels=['serving.knative.dev/visibility=cluster-local']
+  }
 
   return new k8s.apiextensions.CustomResource(
     `${name}-knative-service`, {
@@ -54,9 +62,7 @@ const service = ({
             annotations: {
               ...scaleAnnotations
             },
-            labels: {
-              app
-            }
+            labels
           },
           spec: {
             containers: [{
