@@ -5,8 +5,8 @@ services:
       container_name: cloudleash
       image: pulumi/pulumi
       environment:
-        FLASK_DEBUG: 1
         PULUMI_ACCESS_TOKEN: ${PULUMI_ACCESS_TOKEN}
       volumes:
         - './:/stack'
+        - '/var/run/docker.sock:/var/run/docker.sock'
       tty: true

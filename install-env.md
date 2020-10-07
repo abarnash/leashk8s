@@ -17,7 +17,7 @@ Pull the pulumi docker image
 
 Then start a pulumi container and a bash shell:
 ```
-docker-compose run --entrypoint /bin/bash cloudleash
+docker-compose run --name pstack --entrypoint /bin/bash cloudleash --name pulumi-gcp
 ```
 
 ## Get k8s cluster credentials
