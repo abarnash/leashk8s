@@ -3,20 +3,15 @@ const gloo = require("../resources/gloo.js")
 const kubeless = require("../resources/kubeless.js")
 const knative = require("../resources/knative.js")
 const contour = require("../resources/contour.js")
-const docker = require("@pulumi/docker")
 
 const redisStack = require("./redis.js")
 const apolloStack = require("./apollo.js")
 
 const DOMAIN = 'cloudleash.org'
 
-const nodeRedisImage = new docker.RemoteImage("node-redis", {
-  name: "abarnash/nodefunc"
-})
-
 const ns = new k8s.core.v1.Namespace('leashk8s-dev', {
   metadata: {
-    name: 'leashk8s-dev'
+    name: process.env.PULUMI_NODEJS_STACK
   }
 })
 
@@ -38,7 +33,7 @@ const apollo = apolloStack.stack({
 const nodeRedis = knative.service({
   name: 'node-redis',
   namespace: NAMESPACE_LABEL,
-  image: nodeRedisImage.latest,
+  image:  "docker.io/abarnash/nodefunc",
   env: {
     REDIS_HOST: 'redis-master'
   }

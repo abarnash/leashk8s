@@ -10,7 +10,7 @@ const stack = ({
   const APP_NAME = 'apollo'
   //----------------------------------------------------------------------------
   // Accounts service
-  
+
   const accountsKn = knative.service({
     name: 'accounts',
     namespace: namespace,
@@ -67,7 +67,8 @@ const stack = ({
       min: 1
     },
     env: {
-      KN_HOST: host
+      KN_HOST: host,
+      KN_PORT: '8080'
     },
     app: APP_NAME
   })

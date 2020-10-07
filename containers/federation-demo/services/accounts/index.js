@@ -1,5 +1,9 @@
-const { ApolloServer, gql } = require("apollo-server");
-const { buildFederatedSchema } = require("@apollo/federation");
+const { ApolloServer, gql } = require("apollo-server")
+const { buildFederatedSchema } = require("@apollo/federation")
+
+const {KN_PORT} = process.env
+
+const port = KN_PORT && parseInt(KN_PORT) || 4001
 
 const typeDefs = gql`
   extend type Query {
@@ -35,7 +39,7 @@ const server = new ApolloServer({
   ])
 });
 
-server.listen({ port: 8080 }).then(({ url }) => {
+server.listen({ port: port }).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
 

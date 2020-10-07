@@ -5,7 +5,10 @@ const {
   ApolloGateway
 } = require("@apollo/gateway");
 
-const host = process.env.KN_HOST || 'localhost'
+const {KN_HOST, KN_PORT} = process.env
+
+const host = KN_HOST || 'localhost'
+const port = KN_PORT && parseInt(KN_PORT) || 8080
 
 console.log(host)
 
@@ -52,7 +55,7 @@ const gateway = new ApolloGateway({
   });
 
   server.listen({
-    port: 8080
+    port
   }).then(({
     url
   }) => {
