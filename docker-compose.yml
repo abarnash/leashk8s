@@ -1,11 +1,14 @@
 version: '3.7'
 
 services:
-  cloudleash:
-      container_name: cloudleash
+  leashk8s:
+      container_name: leashk8s
       image: pulumi/pulumi
       environment:
-        PULUMI_ACCESS_TOKEN: ${PULUMI_ACCESS_TOKEN}
+        - "PULUMI_ACCESS_TOKEN=${PULUMI_ACCESS_TOKEN}"
+        - "GCP_PROJECT_NAME=${GCP_PROJECT_NAME}"
+        - "GCP_COMPUTE_REGION=${GCP_COMPUTE_REGION}"
+        - "GKE_CLUSTER_NAME=${GKE_CLUSTER_NAME}"
       volumes:
         - './:/stack'
         - '/var/run/docker.sock:/var/run/docker.sock'
