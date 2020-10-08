@@ -6,12 +6,12 @@ Create a file in your project dir to store your credentials:
 
 Sign into to your pulumi account, go to Settings and then Access Tokens.
 Create a new access token and add this line to your `.env` file
-```
+```sh
 PULUMI_ACCESS_TOKEN=paste_token_here
 ```
 
 Also paste your google cloud information here if you want to automatically load the env variables for later commands:
-```
+```sh
 GCP_PROJECT_NAME=perfect-analog-256413
 GCP_COMPUTE_REGION=us-east4-c
 GKE_CLUSTER_NAME=leash-dev
@@ -22,18 +22,20 @@ GKE_CLUSTER_NAME=leash-dev
 ## Launch the pulumi docker container
 
 Pull the pulumi docker image
-`docker pull pulumi/pulumi`
+```sh
+docker pull pulumi/pulumi
+```
 
 
 Then start a pulumi container and a bash shell:
-```
+```sh
 docker-compose run --name pstack --entrypoint /bin/bash leashk8s
 ```
 
 ## Get k8s cluster credentials
 
 Once in the bash, authorize your gcp account:
-```
+```sh
 gcloud auth login
 ```
 
@@ -47,18 +49,26 @@ gcloud container clusters get-credentials $GKE_CLUSTER_NAME
 ```
 
 Test the configuration worked:
-`gcloud compute instances list`
+```sh
+gcloud compute instances list
+```
 
 ## Launch your Pulumi stack
 
 CD into the project directory
-`cd stack`
+```sh
+cd stack
+```
 
 To create your stack:
-`pulumi up`
+```sh
+pulumi up
+```
 
 Select `create new stack` when prompted.
 Select a name for your stack, this will also be the namespace of all your resources in the cluster.
 
 To see the resources your stack created:
-`kubectl get all -n your-stack-name`
+```sh
+kubectl get all -n your-stack-name
+```

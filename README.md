@@ -3,39 +3,29 @@
 A repository for managing cloud applications on Kubernetes with
 Pulumi.
 
-## Install a Kubernetes development environment in GKE (recommended)
+## Environment Setup
 
-To run this stack in a Google Cloud GKE cluster see instructions
+### Pulumi w/ Docker
+Follow these instructions to deploy the stack to a GKE cluster using the docker `pulumi` image. With this option you won't need to install anything to your local machine other than docker.
+- [Pulumi + Docker Instructions](docs/pulumi-docker.md)
 
-- [Google Cloud Setup Instructions](docs/gke.md)
-
-## Install a local Kubernetes development environment
-
-To run this stack locally, you can install k8s with something like microK8s (runs natively), minikube (runs in a VM) or kind (runs in docker).
-
-- [microK8s Installation Instructions](docs/microk8s.md)
-- [Minikube Installation Instructions](docs/minikube.md)
-
-## Install Pulumi
-To deploy this stack to your Kubernetes cluster you will need a Pulumi developer
-account and the CLI tool installed.
-Instructions here:
-
-https://www.pulumi.com/docs/get-started/install/
+### Other environments
+To install pulumi locally and deploy to k8s clusters other than GKE, see this doc to get started.
+- [Other Options](docs/installation.md)
 
 ## Run the main dev stack
 
 `pulumi up`
 
-When prompted `create new stack` hit enter, and provide a name for your stack.
+When prompted `create new stack` hit enter, and provide a name for your stack. This name will be your namespace in the k8s cluster.
 
 ## Get your stack's namespace
-The stack will create a unique namespace for your stack here:
+The stack will create your unique namespace for your stack here:
 
 ```js
 const ns = new k8s.core.v1.Namespace('leashk8s-dev', {
   metadata: {
-    name: 'leashk8s-dev'
+    name: process.env.PULUMI_NODEJS_STACK
   }
 })
 ```
