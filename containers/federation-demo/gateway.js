@@ -5,13 +5,35 @@ const {
   ApolloGateway
 } = require("@apollo/gateway");
 
-const {KN_HOST, KN_PORT} = process.env
+const {
+  KN_HOST,
+  KN_PORT,
+  KN_SERVICE_LIST
+} = process.env
 
 const host = KN_HOST || 'localhost'
-const port = KN_PORT && parseInt(KN_PORT) || 8080
+const port = KN_PORT && parseInt(KN_PORT) || 4000
 
 console.log(host)
 
+const serviceList = KN_SERVICE_LIST && JSON.parse(KN_SERVICE_LIST) ||
+  [{
+      name: "accounts",
+      url: `http://localhost:4001/graphql`
+    },
+    {
+      name: "reviews",
+      url: `http://localhost:4002/graphql`
+    },
+    {
+      name: "products",
+      url: `http://localhost:4003/graphql`
+    },
+    {
+      name: "inventory",
+      url: `http://localhost:4004/graphql`
+    }
+  ]
 
 const gateway = new ApolloGateway({
   // This entire `serviceList` is optional when running in managed federation
@@ -19,23 +41,7 @@ const gateway = new ApolloGateway({
   // using a single source of truth to compose a schema is recommended and
   // prevents composition failures at runtime using schema validation using
   // real usage-based metrics.
-  serviceList: [{
-      name: "accounts",
-      url: `http://accounts.${host}/graphql`
-    },
-    {
-      name: "reviews",
-      url: `http://reviews.${host}/graphql`
-    },
-    {
-      name: "products",
-      url: `http://products.${host}/graphql`
-    },
-    {
-      name: "inventory",
-      url: `http://inventory.${host}/graphql`
-    }
-  ],
+  serviceList,
 
   // Experimental: Enabling this enables the query plan view in Playground.
   __exposeQueryPlanExperimental: false,

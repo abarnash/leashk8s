@@ -1,6 +1,10 @@
 const { ApolloServer, gql } = require("apollo-server");
 const { buildFederatedSchema } = require("@apollo/federation");
 
+const {KN_PORT} = process.env
+
+const port = KN_PORT && parseInt(KN_PORT) || 4002
+
 const typeDefs = gql`
   type Review @key(fields: "id") {
     id: ID!
@@ -55,7 +59,7 @@ const server = new ApolloServer({
   ])
 });
 
-server.listen({ port: 8080 }).then(({ url }) => {
+server.listen({ port }).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
 

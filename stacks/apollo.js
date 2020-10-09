@@ -6,7 +6,7 @@ const stack = ({
 }) => {
   namespace = namespace || 'default'
   domain = domain || 'localhost'
-  const host = namespace.apply(ns => `${ns}.${domain}`)
+  const host = `${namespace}.${domain}` // namespace.apply(ns => `${ns}.${domain}`)
   const APP_NAME = 'apollo'
   //----------------------------------------------------------------------------
   // Accounts service
@@ -16,7 +16,8 @@ const stack = ({
     namespace: namespace,
     image: 'docker.io/abarnash/accounts',
     env: {
-      KN_HOST: host
+      KN_HOST: host,
+      KN_PORT: '8080'
     },
     app: APP_NAME
   })
@@ -28,7 +29,8 @@ const stack = ({
     namespace: namespace,
     image: 'docker.io/abarnash/reviews',
     env: {
-      KN_HOST: host
+      KN_HOST: host,
+      KN_PORT: '8080'
     },
     app: APP_NAME
   })
@@ -40,7 +42,8 @@ const stack = ({
     namespace: namespace,
     image: 'docker.io/abarnash/products',
     env: {
-      KN_HOST: host
+      KN_HOST: host,
+      KN_PORT: '8080'
     },
     app: APP_NAME
   })
@@ -52,7 +55,8 @@ const stack = ({
     namespace: namespace,
     image: 'docker.io/abarnash/inventory',
     env: {
-      KN_HOST: host
+      KN_HOST: host,
+      KN_PORT: '8080'
     },
     app: APP_NAME
   })
@@ -68,7 +72,24 @@ const stack = ({
     },
     env: {
       KN_HOST: host,
-      KN_PORT: '8080'
+      KN_PORT: '8080',
+      KN_SERVICE_LIST: JSON.stringify([{
+          name: "accounts",
+          url: `http://accounts.${host}/graphql`
+        },
+        {
+          name: "reviews",
+          url: `http://reviews.${host}/graphql`
+        },
+        {
+          name: "products",
+          url: `http://products.${host}/graphql`
+        },
+        {
+          name: "inventory",
+          url: `http://inventory.${host}/graphql`
+        }
+      ])
     },
     app: APP_NAME
   })

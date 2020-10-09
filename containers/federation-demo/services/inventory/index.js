@@ -1,7 +1,18 @@
-const { ApolloServer, gql } = require("apollo-server");
-const { buildFederatedSchema } = require("@apollo/federation");
+const {
+  ApolloServer,
+  gql
+} = require("apollo-server");
+const {
+  buildFederatedSchema
+} = require("@apollo/federation");
 
-const typeDefs = gql`
+const {
+  KN_PORT
+} = process.env
+
+const port = KN_PORT && parseInt(KN_PORT) || 4004
+
+const typeDefs = gql `
   extend type Product @key(fields: "upc") {
     upc: String! @external
     weight: Int @external
@@ -29,20 +40,30 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-  schema: buildFederatedSchema([
-    {
-      typeDefs,
-      resolvers
-    }
-  ])
+  schema: buildFederatedSchema([{
+    typeDefs,
+    resolvers
+  }])
 });
 
-server.listen({ port: 8080 }).then(({ url }) => {
+server.listen({
+  port
+}).then(({
+  url
+}) => {
   console.log(`🚀 Server ready at ${url}`);
 });
 
-const inventory = [
-  { upc: "1", inStock: true },
-  { upc: "2", inStock: false },
-  { upc: "3", inStock: true }
+const inventory = [{
+    upc: "1",
+    inStock: true
+  },
+  {
+    upc: "2",
+    inStock: false
+  },
+  {
+    upc: "3",
+    inStock: true
+  }
 ];

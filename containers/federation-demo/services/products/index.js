@@ -1,7 +1,18 @@
-const { ApolloServer, gql } = require("apollo-server");
-const { buildFederatedSchema } = require("@apollo/federation");
+const {
+  ApolloServer,
+  gql
+} = require("apollo-server");
+const {
+  buildFederatedSchema
+} = require("@apollo/federation");
 
-const typeDefs = gql`
+const {
+  KN_PORT
+} = process.env
+
+const port = KN_PORT && parseInt(KN_PORT) || 4003
+
+const typeDefs = gql `
   extend type Query {
     topProducts(first: Int = 5): [Product]
   }
@@ -28,20 +39,21 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-  schema: buildFederatedSchema([
-    {
-      typeDefs,
-      resolvers
-    }
-  ])
+  schema: buildFederatedSchema([{
+    typeDefs,
+    resolvers
+  }])
 });
 
-server.listen({ port: 8080 }).then(({ url }) => {
+server.listen({
+  port
+}).then(({
+  url
+}) => {
   console.log(`🚀 Server ready at ${url}`);
 });
 
-const products = [
-  {
+const products = [{
     upc: "1",
     name: "Table",
     price: 899,

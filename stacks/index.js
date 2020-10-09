@@ -9,13 +9,13 @@ const apolloStack = require("./apollo.js")
 
 const DOMAIN = 'cloudleash.org'
 
+const NAMESPACE_LABEL = process.env.PULUMI_NODEJS_STACK
+
 const ns = new k8s.core.v1.Namespace('leashk8s-dev', {
   metadata: {
-    name: process.env.PULUMI_NODEJS_STACK
+    name: NAMESPACE_LABEL
   }
 })
-
-const NAMESPACE_LABEL = ns.metadata.name;
 
 const appLabels = {
   app: "nginx"
