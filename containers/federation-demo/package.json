@@ -18,6 +18,7 @@
   "dependencies": {
     "@apollo/gateway": "latest",
     "apollo-server": "latest",
-    "graphql": "latest"
+    "graphql": "latest",
+    "mongodb": "^3.6.2"
   }
 }

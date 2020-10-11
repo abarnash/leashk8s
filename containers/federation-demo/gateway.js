@@ -14,7 +14,7 @@ const {
 const host = KN_HOST || 'localhost'
 const port = KN_PORT && parseInt(KN_PORT) || 4000
 
-console.log(host)
+console.log(process.env)
 
 const serviceList = KN_SERVICE_LIST && JSON.parse(KN_SERVICE_LIST) ||
   [{
