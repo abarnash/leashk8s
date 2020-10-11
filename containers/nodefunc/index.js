@@ -8,8 +8,8 @@ const asyncRedis = require("async-redis");
 
 /* Values are hard-coded for this example, it's usually best to bring these in via file or environment variable for production */
 const client = redis.createClient({
-  port: process.env.REDIS_LEADER_SERVICE_PORT || 6379,
-  host: process.env.REDIS_LEADER_SERVICE_HOST || 'localhost',
+  port: process.env.REDIS_MASTER_SERVICE_PORT || 6379,
+  host: process.env.REDIS_MASTER_SERVICE_HOST || 'localhost',
   // password: process.env.PASSWORD || '',
 })
 
@@ -21,7 +21,6 @@ client.on("error", function(error) {
 
 app.post('/key', (req, res) => {
   console.log('Hello world received a post request');
-
 
   client.set("key", uuid.v4())
 

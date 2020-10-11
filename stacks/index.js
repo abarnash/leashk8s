@@ -4,9 +4,9 @@ const kubeless = require("../resources/kubeless.js")
 const knative = require("../resources/knative.js")
 const contour = require("../resources/contour.js")
 
-const redisStack = require("./redis.js")
 const apolloStack = require("./apollo.js")
 const mongo = require("../charts/mongodb.js")
+const redisChart = require("../charts/redis.js")
 
 const DOMAIN = 'cloudleash.org'
 
@@ -22,11 +22,7 @@ const mongodb = mongo.db({
   namespace: NAMESPACE_LABEL
 })
 
-const appLabels = {
-  app: "nginx"
-}
-
-const redis = redisStack.stack({
+const redis = redisChart.redis({
   namespace: NAMESPACE_LABEL
 })
 
