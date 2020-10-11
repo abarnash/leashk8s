@@ -5,6 +5,8 @@ const knative = require("../resources/knative.js")
 const contour = require("../resources/contour.js")
 
 const apolloStack = require("./apollo.js")
+const apolloWSStack = require("./apollo-ws.js")
+
 const mongo = require("../charts/mongodb.js")
 const redisChart = require("../charts/redis.js")
 
@@ -23,6 +25,11 @@ const mongodb = mongo.db({
 })
 
 const redis = redisChart.redis({
+  namespace: NAMESPACE_LABEL
+})
+
+const apolloWS = apolloWSStack.stack({
+  domain: DOMAIN,
   namespace: NAMESPACE_LABEL
 })
 

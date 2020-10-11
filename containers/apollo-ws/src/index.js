@@ -24,6 +24,8 @@ const port = parseInt(KN_PORT)
 
 const app = express();
 
+app.use(express.static('public'))
+
 const pubsub = new PubSub();
 const MESSAGE_CREATED = 'MESSAGE_CREATED';
 
