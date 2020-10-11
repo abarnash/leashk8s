@@ -6,6 +6,7 @@ const contour = require("../resources/contour.js")
 
 const redisStack = require("./redis.js")
 const apolloStack = require("./apollo.js")
+const mongo = require("../charts/mongodb.js")
 
 const DOMAIN = 'cloudleash.org'
 
@@ -15,6 +16,10 @@ const ns = new k8s.core.v1.Namespace('leashk8s-dev', {
   metadata: {
     name: NAMESPACE_LABEL
   }
+})
+
+const mongodb = mongo.db({
+  namespace: NAMESPACE_LABEL
 })
 
 const appLabels = {
@@ -33,7 +38,7 @@ const apollo = apolloStack.stack({
 const nodeRedis = knative.service({
   name: 'node-redis',
   namespace: NAMESPACE_LABEL,
-  image:  "docker.io/abarnash/nodefunc",
+  image: "docker.io/abarnash/nodefunc",
   env: {
     REDIS_HOST: 'redis-master'
   }
