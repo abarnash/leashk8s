@@ -8,17 +8,22 @@ import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
+import { config } from 'dotenv'
+
 import App from './App'
+console.log(process.env.NODE_ENV)
 
 const {
-  APOLLO_WS_HOST = 'localhost',
-  APOLLO_WS_PORT = '4005',
-  APOLLO_HTTP_HOST = 'localhost',
-  APOLLO_HTTP_PORT = '4005'
+  REACT_APP_APOLLO_WS_HOST,
+  REACT_APP_APOLLO_WS_PORT,
+  REACT_APP_APOLLO_HTTP_HOST,
+  REACT_APP_APOLLO_HTTP_PORT
 } = process.env
 
-const apolloWSUri = `ws://${APOLLO_WS_HOST}:${APOLLO_WS_PORT}/graphql`
-const apolloHTTPUri = `http://${APOLLO_HTTP_HOST}:${APOLLO_HTTP_PORT}/graphql`
+console.log(process.env)
+
+const apolloWSUri = `ws://${REACT_APP_APOLLO_WS_HOST}:${REACT_APP_APOLLO_WS_PORT}/graphql`
+const apolloHTTPUri = `http://${REACT_APP_APOLLO_HTTP_HOST}:${REACT_APP_APOLLO_HTTP_PORT}/graphql`
 
 console.log(apolloWSUri, apolloHTTPUri)
 
