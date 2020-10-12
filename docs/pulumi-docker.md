@@ -55,9 +55,11 @@ gcloud compute instances list
 
 ## Launch your Pulumi stack
 
-CD into the project directory
+CD into the project directory, install dependencies, and add helm repos:
 ```sh
-cd stack
+cd stack && \
+helm repo add bitnami https://charts.bitnami.com/bitnami && \
+npm i
 ```
 
 To create your stack:
