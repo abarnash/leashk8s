@@ -23,6 +23,25 @@ const makeScale = ({
   }
 }
 
+const makeTraffic = name => ({
+  version,
+  percent
+}) => {
+  if (version === 'latest') {
+    return {
+      tag: 'latest',
+      latestRevision: true,
+      percent
+    }
+  } else {
+    return {
+      tag: `v${version}`,
+      revisionName: `${name}-v${version}`,
+      percent
+    }
+  }
+}
+
 const service = ({
   name,
   env,
@@ -30,7 +49,9 @@ const service = ({
   scale,
   namespace,
   port,
-  app
+  app,
+  version = '0',
+  traffic
 }) => {
   namespace = namespace || 'default'
   port = port || 8080
@@ -38,39 +59,51 @@ const service = ({
   scaleAnnotations = makeScale(scale)
   app = app || name
 
-  let labels = {app}
+  let labels = {
+    app
+  }
 
   let top_labels = []
 
-  return new k8s.apiextensions.CustomResource(
-    `${name}-knative-service`, {
-      apiVersion: 'serving.knative.dev/v1',
-      kind: 'Service',
-      metadata: {
-        name: name,
-        namespace: namespace
-      },
-      spec: {
-        template: {
-          metadata: {
-            annotations: {
-              ...scaleAnnotations
-            },
-            labels
+  let crd = {
+    apiVersion: 'serving.knative.dev/v1',
+    kind: 'Service',
+    metadata: {
+      name: name,
+      namespace: namespace
+    },
+    spec: {
+      template: {
+        metadata: {
+          annotations: {
+            ...scaleAnnotations
           },
-          spec: {
-            containers: [{
-              image: image,
-              env: makeEnv(env),
-              ports: [{
-                name: `http1`,
-                containerPort: port
-              }]
+          name: `${name}-v${version}`,
+          labels
+        },
+        spec: {
+          containers: [{
+            image: image,
+            env: makeEnv(env),
+            ports: [{
+              name: `http1`,
+              containerPort: port
             }]
-          }
+          }]
         }
       }
-    }, {})
+    }
+  }
+
+  if (traffic) {
+    crd.spec.traffic = traffic.map(makeTraffic(name))
+  }
+
+  console.log(crd.spec.traffic)
+
+  return new k8s.apiextensions.CustomResource(
+    `${name}-knative-service`,
+    crd, {})
 }
 
 exports.service = service

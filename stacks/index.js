@@ -59,11 +59,26 @@ const knRubyService = knative.service({
 const knCljService = knative.service({
   name: 'helloworld-clj',
   namespace: NAMESPACE_LABEL,
+  version: '3',
   image: 'docker.io/abarnash/helloworld-clj',
   env: {
-    TARGET: 'Friend of Leash',
+    TARGET: 'Friendish of Leash',
     SOURCE: 'Leash'
-  }
+  },
+  traffic: [
+    {
+      version: '1',
+      percent: 10
+    },
+    {
+      version: '2',
+      percent: 70
+    },
+    {
+      version: 'latest',
+      percent: 20
+    }
+  ]
 })
 
 const knGoService = knative.service({
