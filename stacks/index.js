@@ -14,7 +14,7 @@ const DOMAIN = 'cloudleash.org'
 
 const NAMESPACE_LABEL = process.env.PULUMI_NODEJS_STACK
 
-const ns = new k8s.core.v1.Namespace('leashk8s-dev', {
+const ns = new k8s.core.v1.Namespace(NAMESPACE_LABEL, {
   metadata: {
     name: NAMESPACE_LABEL
   }
