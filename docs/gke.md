@@ -73,3 +73,25 @@ By default, Knative will route service to the domain `example.com`
 you can specify a different domain name by editing `config-domain.yaml` and
 running
 `kubectl apply --filename config-domain.yaml`
+
+## Install Knative eventing
+
+https://knative.dev/docs/install/any-kubernetes-cluster/#installing-the-eventing-component
+
+
+```
+kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.0/eventing-crds.yaml
+
+kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.0/eventing-core.yaml
+```
+
+In-memory channel messenger:
+```
+kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.0/in-memory-channel.yaml
+```
+
+Broker:
+```
+kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.0/mt-channel-broker.yaml
+
+```
