@@ -85,9 +85,10 @@ const knGoService = knative.service({
   name: 'helloworld-go',
   namespace: NAMESPACE_LABEL,
   scale: {
-    max: 2,
+    max: 5,
     min: 0,
-    initial: 2
+    initial: 2,
+    target: 10
   },
   image: 'gcr.io/knative-samples/helloworld-go',
   env: {

@@ -9,18 +9,26 @@ const makeEnv = (env) =>
 const makeScale = ({
   min,
   max,
-  initial
+  initial,
+  target
 }) => {
   min = min && String(min) || '0'
   max = max && String(max) || '1'
   initial = initial && String(initial) || '1'
-  return {
+  let autoscale = {
     'autoscaling.knative.dev/class': 'kpa.autoscaling.knative.dev',
     'autoscaling.knative.dev/metric': 'concurrency',
+    'autoscaling.knative.dev/target': target,
     'autoscaling.knative.dev/initialScale': initial,
     'autoscaling.knative.dev/minScale': min,
     'autoscaling.knative.dev/maxScale': max
   }
+
+  if (target){
+    autoscale['autoscaling.knative.dev/target'] = String(target)
+  }
+  
+  return autoscale
 }
 
 const makeTraffic = name => ({
@@ -98,8 +106,6 @@ const service = ({
   if (traffic) {
     crd.spec.traffic = traffic.map(makeTraffic(name))
   }
-
-  console.log(crd.spec.traffic)
 
   return new k8s.apiextensions.CustomResource(
     `${name}-knative-service`,
