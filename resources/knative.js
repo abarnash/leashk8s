@@ -24,10 +24,10 @@ const makeScale = ({
     'autoscaling.knative.dev/maxScale': max
   }
 
-  if (target){
+  if (target) {
     autoscale['autoscaling.knative.dev/target'] = String(target)
   }
-  
+
   return autoscale
 }
 
@@ -113,3 +113,43 @@ const service = ({
 }
 
 exports.service = service
+
+const makeSchedule = ({
+  minute = '*',
+  hour = '*',
+  month = '*',
+  dayOfMonth = '*',
+  dayOfWeek = '*'
+}) => `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`
+
+exports.ping = ({
+  data = {},
+  schedule = { minute: '*/1'},
+  name,
+  namespace,
+  sink
+}) => {
+
+  const cronEvent = {
+    apiVersion: 'sources.knative.dev/v1beta1',
+    kind: 'PingSource',
+    metadata: {
+      name,
+      namespace
+    },
+    spec: {
+      schedule: makeSchedule(schedule),
+      jsonData: JSON.stringify(data),
+      sink: {
+        ref: {
+          apiVersion: sink.apiVersion,
+          kind: sink.kind,
+          name: sink.metadata.name
+        }
+      }
+    }
+  }
+  return new k8s.apiextensions.CustomResource(
+    `${name}-knative-cronjob`,
+    cronEvent, {})
+}
