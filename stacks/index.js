@@ -45,14 +45,6 @@ const eventExample = eventStack.stack({
   namespace: NAMESPACE_LABEL
 })
 
-const eventPing = knative.ping({
-  data: { message: 'Hi, Event Ping.' },
-  name: 'event-cron',
-  namespace: NAMESPACE_LABEL,
-  schedule: { minute: '*/20'},
-  sink: eventExample.service
-})
-
 const nodeRedis = knative.service({
   name: 'node-redis',
   namespace: NAMESPACE_LABEL,

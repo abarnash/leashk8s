@@ -124,7 +124,9 @@ const makeSchedule = ({
 
 exports.ping = ({
   data = {},
-  schedule = { minute: '*/1'},
+  schedule = {
+    minute: '*/1'
+  },
   name,
   namespace,
   sink
@@ -150,6 +152,55 @@ exports.ping = ({
     }
   }
   return new k8s.apiextensions.CustomResource(
-    `${name}-knative-cronjob`,
+    `${name}-kn-ping`,
     cronEvent, {})
+}
+
+exports.broker = ({
+  name,
+  namespace
+}) => {
+  const broker = {
+    apiVersion: 'eventing.knative.dev/v1',
+    kind: 'Broker',
+    metadata: {
+      name,
+      namespace
+    },
+    spec: {}
+  }
+  return new k8s.apiextensions.CustomResource(name, broker)
+}
+
+exports.trigger = ({
+  broker,
+  filter,
+  name,
+  namespace,
+  subscriber
+}) => {
+  let trigger = {
+    apiVersion: 'eventing.knative.dev/v1',
+    kind: 'Trigger',
+    metadata: {
+      name,
+      namespace
+    },
+    spec: {
+      broker: broker.metadata.name,
+      subscriber: {
+        ref: {
+          apiVersion: subscriber.apiVersion,
+          kind: subscriber.kind,
+          name: subscriber.metadata.name
+        }
+      }
+    }
+  }
+
+  if (filter) {
+    trigger.spec.filter = filter
+  }
+
+  return new k8s.apiextensions.CustomResource(name, trigger)
 }

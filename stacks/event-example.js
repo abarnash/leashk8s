@@ -18,8 +18,73 @@ const stack = ({
     env: {}
   })
 
+  const byeService = knative.service({
+    name: 'event-display-bye',
+    namespace: namespace,
+    image: 'gcr.io/knative-releases/knative.dev/eventing-contrib/cmd/event_display',
+    env: {}
+  })
+
+  const ping = knative.ping({
+    data: {
+      message: 'Hi, Event Ping.'
+    },
+    name: `${name}-ping`,
+    schedule: {
+      minute: '*/20'
+    },
+    sink: service,
+    namespace
+  })
+
+  const broker = knative.broker({
+    name: `${name}-broker`,
+    namespace
+  })
+
+  const pingBroker = knative.ping({
+    data: {
+      message: 'Hi, from the Broker'
+    },
+    name: `${name}-ping`,
+    schedule: {
+      minute: '*/20'
+    },
+    sink: service,
+    namespace
+  })
+
+  const defaultTrigger = knative.trigger({
+    broker,
+    namespace,
+    filter: {
+      attributes: {
+        type: 'greeting'
+      }
+    },
+    name: `hi-trigger`,
+    subscriber: service
+  })
+
+  const byeTrigger = knative.trigger({
+    broker,
+    namespace,
+    filter: {
+      attributes: {
+        source: 'sendoff'
+      }
+    },
+    name: `bye-trigger`,
+    subscriber: byeService
+  })
+
   return {
-    service
+    services: {
+      service,
+      byeService
+    },
+    ping,
+    broker
   }
 }
 
