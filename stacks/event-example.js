@@ -25,6 +25,16 @@ const stack = ({
     env: {}
   })
 
+  const senderService = knative.service({
+    name: 'event-api',
+    namespace: namespace,
+    image: 'docker.io/abarnash/event-api',
+    env: {
+      BROKER_HOST: 'http://broker-ingress.knative-eventing.svc.cluster.local',
+      BROKER_PATH: `${namespace}/${name}-broker`
+    }
+  })
+
   const ping = knative.ping({
     data: {
       message: 'Hi, Event Ping.'
@@ -39,18 +49,6 @@ const stack = ({
 
   const broker = knative.broker({
     name: `${name}-broker`,
-    namespace
-  })
-
-  const pingBroker = knative.ping({
-    data: {
-      message: 'Hi, from the Broker'
-    },
-    name: `${name}-ping`,
-    schedule: {
-      minute: '*/20'
-    },
-    sink: service,
     namespace
   })
 
